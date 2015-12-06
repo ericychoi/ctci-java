@@ -1,12 +1,17 @@
-package com.rookie1.Tree
-
 import java.util.Stack;
+import java.util.LinkedList;
 
 public class Tree {
   public static void main(String[] args) {
     Node root = buildTree();
+    System.out.println("in:");
     inOrder(root);
-    System.out.println("");
+    System.out.println("\npre:");
+    preOrder(root);
+    System.out.println("\npost:");
+    postOrder(root);
+    System.out.println("\nBFS:");
+    BFS(root);
   }
 
   static Node buildTree() {
@@ -47,7 +52,7 @@ public class Tree {
   }
 
   static void inOrder(Node root) {
-    Stack<Node> s= new Stack<Node>();
+    Stack<Node> s = new Stack<Node>();
     Node n = root;
     while (!(n == null && s.isEmpty())) {
       if (n != null) {
@@ -62,4 +67,59 @@ public class Tree {
     }
   }
 
+  static void preOrder(Node root) {
+    Stack<Node> s = new Stack<Node>();
+    Node n = root;
+    while (!(n == null && s.isEmpty())) {
+      if (n != null) {
+        n.visit();
+        if (n.R != null) {
+          s.push(n.R);
+        }
+        n = n.L;
+      }
+      else {
+        n = s.pop();
+      }
+    }
+  }
+
+  static void postOrder(Node root) {
+    Stack<Node> s = new Stack<Node>();
+    Node lastVisited = null;
+    Node n = root;
+    while (!(n == null && s.isEmpty())) {
+      if (n != null) {
+        s.push(n);
+        n = n.L;
+      }
+      else {
+        n = s.peek();
+        if (n.R != null && n.R != lastVisited) {
+          n = n.R;
+        }
+        else {
+          n.visit();
+          s.pop();
+          lastVisited = n;
+          n = null;
+        }
+      }
+    }
+  }
+
+  static void BFS (Node root) {
+    LinkedList<Node> q = new LinkedList<Node>();
+    q.add(root);
+    while (q.size() != 0) {
+      Node n = q.remove();
+      n.visit();
+      if (n.L != null) {
+        q.add(n.L);
+      }
+      if (n.R != null) {
+        q.add(n.R);
+      }
+    }
+  }
 }
